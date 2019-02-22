@@ -20,6 +20,9 @@ $(document).ajaxStart(function(){
 // 在全部ajax完成时, 关闭进度条
 $(document).ajaxStop(function(){
     // 关闭进度条
+    // NProgress.done();
+    
+    // 延迟是模拟进度条, 实际开发不要写延迟
     setTimeout(function(){
         NProgress.done();
     }, 1000);
