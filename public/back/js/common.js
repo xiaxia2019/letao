@@ -20,7 +20,43 @@ $(document).ajaxStart(function(){
 $(document).ajaxStop(function(){
     // 关闭进度条
     setTimeout(function(){
-
         NProgress.done();
-    }, 1000)
+    }, 1000);
+});
+
+
+
+// 入口函数: 等待dom结构加载完后执行
+$(function(){
+    // 1. 左侧二级菜单切换
+    $(".lt_aside .category").on("click", function(){
+        $(this).next().stop().slideToggle();
+    });
+
+    // 2. 左侧整体菜单隐藏/显示切换 (改左侧菜单left值)
+    $(".lt_topbar .icon_menu").on("click", function(){
+        $(".lt_aside").toggleClass("hidemenu");
+        $(".lt_main").toggleClass("hidemenu");
+        $(".lt_topbar").toggleClass("hidemenu");
+    });
+
+    // 3. 退出功能 (点击菜单退出按钮, 显示模态框)
+    $(".lt_topbar .icon_out").on("click", function(){
+        $("#logoutModal").modal("show");
+    });
+    // 点击模态框退出按钮, 确认退出
+    // 发送ajax请求, 让服务器端销毁用户登录状态
+    $("#logoutBtn").on("click", function(){
+        $.ajax({
+            url: "/employee/employeeLogout",
+            type: "get",
+            dataType: "json",
+            success: function(res){
+                if (res.success) {
+                    // 退出成功
+                    location.href = "login.html";
+                }
+            }
+        });
+    });
 });
