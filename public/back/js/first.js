@@ -16,6 +16,7 @@ $(function(){
                 pageSize: pageSize  // 每页条数
             },
             success: function(res){
+                console.log(res);
                 var htmlStr = template("firstTpl", res);
                 $("tbody").html(htmlStr);
     
@@ -28,8 +29,7 @@ $(function(){
                     onPageClicked: function(a, b, c, page) {
                         // 更新当前页
                         currentPage = page;
-                        // 重新渲染第一页
-                        currentPage = 1;
+                        // 重新渲染
                         render();
                     }
                 });
@@ -38,10 +38,9 @@ $(function(){
     }
 
 
-    // 2. 点击添加分类按钮, 
+    // 2. 点击添加分类按钮
     $("#addBtn").on("click", function(){
         $("#addModal").modal("show");
-        
     });
 
 
@@ -83,7 +82,8 @@ $(function(){
                 if (res.success) {
                     // 关闭模态框
                     $("#addModal").modal("hide");
-                    // 重新渲染
+                    // 重新渲染第一页
+                    currentPage = 1;
                     render();
                     // 表单内容和状态重置
                     $("#form").data("bootstrapValidator").resetForm(true);
