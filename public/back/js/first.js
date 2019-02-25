@@ -44,7 +44,7 @@ $(function(){
     });
 
 
-    // 3. 添加校验
+    // 3. 表单校验
     $("#form").bootstrapValidator({
         // 图标
         feedbackIcons: {

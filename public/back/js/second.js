@@ -52,7 +52,7 @@ $(function(){
             },
             dataType: "json",
             success: function(res){
-                console.log(res);
+                // console.log(res);
                 var htmlStr = template("dropdowTpl", res);
                 $(".dropdown-menu").html(htmlStr);
             }
@@ -64,55 +64,103 @@ $(function(){
     $(".dropdown-menu").on("click", "a", function(){
         var txt = $(this).text();
         $("#dropdownTxt").text(txt);
+        // 获取id, 设置给隐藏域
+        var id = $(this).data("id");
+        $("[name='categoryId']").val(id);
+        // 只要给隐藏域赋值, 此时校验状态应更新为成功
+        $("#form").data("bootstrapValidator").updateStatus("categoryId", "VALID");
     });
 
 
 
-    // 4. 添加校验
-    // $("#form").bootstrapValidator({
-    //     // 图标
-    //     feedbackIcons: {
-    //         valid: 'glyphicon glyphicon-ok',
-    //         invalid: 'glyphicon glyphicon-remove',
-    //         validating: 'glyphicon glyphicon-refresh'
-    //     },
-    //     // 配置需要校验的字段
-    //     fields: {
-    //         categoryName: {
-    //             // 配置校验规则
-    //             validators: {
-    //                 // 非空校验
-    //                 notEmpty: {
-    //                     message: "请输入一级分类名称"
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
+    // 4. 文件上传初始化
+    $("#fileupload").fileupload({
+        dataType: "json",
+        // 文件上传完成时的回调函数
+        done: function (e, data) {
+            //e：事件对象
+            //data：图片上传后的对象，通过data.result.picAddr可以获取上传后的图片地址
+            // console.log(data);
+            var picUrl = data.result.picAddr;
+            $("#imgBox img").attr("src", picUrl);
+            // 路径赋值给隐藏域
+            $("[name='brandLogo']").val(picUrl);
+            // 只要给隐藏域赋值, 此时校验状态应更新为成功
+            $("#form").data("bootstrapValidator").updateStatus("brandLogo", "VALID");
+        }
+    });
 
 
-    // 5. 注册表单校验成功事件, 阻止默认提交, 通过ajax提交
-    // $("#form").on("success.form.bv", function(e){
-    //     // 阻止默认提交
-    //     e.preventDefault();
-    //     // 通过ajax提交
-    //     $.ajax({
-    //         url: "/category/addTopCategory",
-    //         type: "post",
-    //         data: $("#form").serialize(),
-    //         dataType: "json",
-    //         success: function(res){
-    //             // 添加成功
-    //             if (res.success) {
-    //                 // 关闭模态框
-    //                 $("#addModal").modal("hide");
-    //                 // 重新渲染第一页
-    //                 currentPage = 1;
-    //                 render();
-    //                 // 表单内容和状态重置
-    //                 $("#form").data("bootstrapValidator").resetForm(true);
-    //             }
-    //         }
-    //     });
-    // });
+    // 5. 表单校验
+    $("#form").bootstrapValidator({
+        // 配置 excluded排除项, 将默认项重置, 让隐藏域的校验规则显示
+        excluded: [],
+
+        // 图标
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        // 配置需要校验的字段列表
+        fields: {
+            // 选择一级分类
+            categoryId: {
+                // 配置校验规则
+                validators: {
+                    // 非空校验
+                    notEmpty: {
+                        message: "请选择一级分类"
+                    }
+                }
+            },
+            // 输入二级分类名称
+            brandName: {
+                validators: {
+                    notEmpty: {
+                        message: "请输入二级分类明细"
+                    }
+                }
+            },
+            // 二级分类图片
+            brandLogo: {
+                validators: {
+                    notEmpty: {
+                        message: "请选择图片"
+                    }
+                }
+            }
+        }
+    });
+
+
+    // 6. 注册表单校验成功事件, 阻止默认提交, 通过ajax提交
+    $("#form").on("success.form.bv", function(e){
+        // 阻止默认提交
+        e.preventDefault();
+        // 通过ajax提交
+        $.ajax({
+            url: "/category/addSecondCategory",
+            type: "post",
+            // 图片文件在上面已经单独上传, 这里只需上传文件地址, 所以可以用.serialize()
+            data: $("#form").serialize(),
+            dataType: "json",
+            success: function(res){
+                // 添加成功
+                if (res.success) {
+                    // 关闭模态框
+                    $("#addModal").modal("hide");
+                    // 重新渲染第一页
+                    currentPage = 1;
+                    render();
+                    // 表单内容和状态重置
+                    $("#form").data("bootstrapValidator").resetForm(true);
+                    // button 和 img 不是表单元素, 需手动重置
+                    $("#dropdownText").text("请选择一级分类");
+                    $("#imgBox img").attr("src", "images/none.png");
+                }
+            }
+        });
+    });
+
 });

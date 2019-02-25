@@ -101,17 +101,20 @@
                                     <!-- 动态渲染 -->
                                 </ul>
                             </div>
+                            <!-- 准备一个隐藏域, 专门用于提交数据 -->
+                            <input type="hidden" name="categoryId">
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" name="brandName" placeholder="请输入二级分类">
                         </div>
                         <div class="form-group">
                             <label class="btn btn-default" for="fileupload">选择图片</label>
-                            <input type="file" id="fileupload" style="display:none;">
+                            <!-- 配置必要属性, type="file", name, data-url(上传文件时请求的地址) -->
+                            <input type="file" name="pic1" data-url="/category/addSecondCategoryPic" id="fileupload" style="display:none;">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="imgBox">
                             <img src="images/none.png" width="100">
-                            <!-- 图片地址 -->
+                            <!-- 准备一个隐藏域, 专门用于提交文件数据 -->
                             <input type="hidden" name="brandLogo">
                         </div>
                     </div>
@@ -158,11 +161,13 @@
 
     <script type="text/html" id="dropdowTpl">
         {{each rows val}}
-        <li><a href="#">{{val.categoryName}}</a></li>
+        <li><a href="#" data-id="{{val.id}}">{{val.categoryName}}</a></li>
         {{/each}}
     </script>
 
     <script src="lib/jquery/jquery.js"></script>
+    <script src="lib/jquery-fileupload/jquery.ui.widget.js"></script>
+    <script src="lib/jquery-fileupload/jquery.fileupload.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src="lib/bootstrap-validator/js/bootstrapValidator.js"></script>
     <script src="lib/nprogress/nprogress.js"></script>
