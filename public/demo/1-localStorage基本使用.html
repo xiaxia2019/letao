@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // localStorage 本地存储api
+        // 基于键值对的存储
+        
+        // localStorage.setItem(key, val);  //存储
+        // localStorage.getItem(key);  // 获取
+        // localStorage.removeItem(key);  // 移出单个
+        // localStorage.clear();  // 清空所有
+
+        // 注意:
+        // localStorage只能存储字符串类型的数据 !!!
+
+        // 如何存储复杂数据类型的数据:
+        // 将复杂数据类型转为json格式进行操作
+
+        /* 
+        1. 存储
+            先将复杂数据类型, 转成jsonStr --> JSON.stringify(arr/obj)
+            再利用 localStorage.setItem(key, jsonStr); 存储数据
+        2. 获取
+            利用 localStorage.getItem(key); 获取jsonStr
+            再将json数据转成复杂数据类型 --> JSON.parse(jsonStr)
+        */
+    </script>
+</body>
+</html>
